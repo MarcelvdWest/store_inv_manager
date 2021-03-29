@@ -1,0 +1,43 @@
+.App {
+  text-align: center;
+}
+
+.mainHeading {
+  font-size: 60px;
+  padding: 30px;
+  padding-bottom: 10px;
+}
+
+.error {
+  color: red;
+}
+
+.navBtn {
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+  background-color: #d5d6ce;
+  border-color: #5e5e5a;
+  color: #333333;  
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.navBtn:hover, .navBtn:focus, .navBtn:active, 
+.navBtn:visited {
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+  background-color: #8b8b83;
+  background: #8b8b83 ;
+  border-color: #353532;
+  color: #333333;  
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+.nav {
+  padding: 12px;
+  margin-bottom: 25px;
+}

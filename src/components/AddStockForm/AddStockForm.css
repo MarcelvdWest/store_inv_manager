@@ -1,0 +1,16 @@
+.formLabel {
+    padding-right: 60px;
+}
+
+Form {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.error {
+    color: red;
+}
+
+.innitialAddHeading {
+    padding-bottom: 32px;
+}
