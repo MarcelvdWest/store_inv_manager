@@ -109,7 +109,7 @@ class App extends Component {
  
   render() {
     
-    const { error, msg, stateItems  } = this.state
+    const { error, msg, loc, stateItems  } = this.state
 
     return(
       <div>
