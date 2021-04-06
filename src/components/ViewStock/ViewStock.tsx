@@ -1,18 +1,27 @@
 import React, { Component } from 'react'
-import './ViewStock.css'
 import {  Table  } from 'react-bootstrap'
 import { MDBTypography } from 'mdbreact'
 
 
+interface IItem {
+    item: string,
+    qty: number,
+    avrPrice: number,
+    count: number
+}
 
-class AddStockForm extends Component {
+interface IAppProps{
+    stateItems: Array<IItem>
+}
+
+class AddStockForm extends Component<IAppProps> {
 
     render(){
         const { stateItems } =  this.props
         
         return(
             <div>
-                <center><MDBTypography tag='h2'>Stock Table</MDBTypography></center>
+                <div className='center'><MDBTypography tag='h2'>Stock Table</MDBTypography></div>
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>

@@ -1,38 +1,64 @@
 import React, { Component } from 'react'
-import './BuyersForm.css'
 import { Form, Button } from 'react-bootstrap'
 import { MDBTypography } from 'mdbreact'
 
+interface IItemParam {
+    item: string,
+    qty: string,
+    price?: string,
+    email: string
+}
 
-const items = {
+interface IError {
+    msg: string,
+    status: string
+}
+
+interface IItem {
+    item: string,
+    qty: number,
+    avrPrice: number,
+    count: number
+}
+
+interface IAppProps{
+    onSubmitOrder(items: IItemParam): void,
+    error: IError,
+    msg: string,
+    stateItems: Array<IItem>
+}
+
+const items: IItemParam = {
     email: '',
     item: '',
-    qty: 0
+    qty: ''
 }
 
 
-class AddStockForm extends Component {
+
+
+class AddStockForm extends Component<IAppProps> {
 
     //updates email variable when user types
-    handleEmailChange = (event) => {
+    handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         items.email = event.target.value
         console.log(items.email)
     }
     
     //updates item variable when user type
-    handleItemChange = (event) => {
+    handleItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         items.item = event.target.value
         console.log(items.item)
     }
 
     //updates qty variable when user types
-    handleQtyChange = (event) => {
+    handleQtyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         items.qty = event.target.value
         console.log(items.qty)
     }
 
     //Triggers onSubmit method when enter is pressed
-    handleEnter = (event) => {
+    handleEnter = (event: React.KeyboardEvent) => {
         if(event.key === 'Enter'){
             this.props.onSubmitOrder(items)
         }
@@ -52,22 +78,22 @@ class AddStockForm extends Component {
                     //Dynamic changes to page depending on user action
                     error.status === 'true' 
                         ?
-                            <center>
+                            <div className='center'>
                                 <MDBTypography tag='h2'>Buy Items</MDBTypography>
                                 <MDBTypography tag='h5' className='error'>{ error.msg }</MDBTypography>
-                            </center>
+                            </div>
                         :    
                             (
                                 msg !== '' 
                                     ?
-                                    <center>
+                                    <div className='center'>
                                         <MDBTypography tag='h2'>Buy Items</MDBTypography>
                                         <MDBTypography tag='h5' >{ msg }</MDBTypography>
-                                    </center>
+                                    </div>
                                 :
-                                    <center>
+                                    <div className='center'>
                                         <MDBTypography tag='h2' className='innitialAddHeading'>Buy Items</MDBTypography>
-                                    </center>    
+                                    </div>    
                             )                                    
                 }
                 <Form>

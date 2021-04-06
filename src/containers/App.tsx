@@ -8,7 +8,35 @@ import { MDBTypography } from 'mdbreact'
 import './App.css'
 
 //This creates an object to store data for the session
-const initialState = {
+interface IItem {
+  item: string,
+  qty: number,
+  avrPrice: number,
+  count: number
+}
+
+interface IItemParam {
+  item: string,
+  qty: string,
+  price: string,
+  email: string
+}
+
+interface IError {
+  msg: string,
+  status: string
+}
+
+
+interface IState {
+  stateItems: Array<IItem>,
+  emails: Array<String>,
+  error: IError,
+  msg: string,
+  loc: string
+}
+
+const initialState: IState = {
   stateItems: [
     {
       item: '0',
@@ -38,62 +66,68 @@ const initialState = {
   loc: 'AddStock'
 }
 
+interface IAppProps {
 
-class App extends Component {
+}
+
+
+class App extends Component <IAppProps, IState> {
   
-  constructor(){
-    super();
+  constructor(props: IAppProps) {
+    super(props);
     this.state = initialState; //Creates that state object
   }
 
   //Uses user input to update the state variable. Used with AddStockForm
-  onSubmitItems = ( items ) => {
-    const { stateItems } = this.state
+  onSubmitItems = ( items: IItemParam ): void => {
+    const { stateItems, error } = this.state
     
-    if(items.qty > 0 && items.price > 0){
-      const currQty = stateItems[Number(items.item)].qty
-      const totalQty = Number(currQty) + Number(items.qty)
+    if (Number(items.qty) > 0 && Number(items.price) > 0) {
+      const currQty: number = stateItems[Number(items.item)].qty
+      const totalQty: number = Number(currQty) + Number(items.qty)
       stateItems[Number(items.item)].qty = totalQty
 
-      const currAvr = stateItems[Number(items.item)].avrPrice
-      const currCount = stateItems[Number(items.item)].count
-      const totalAvr = (Number(currAvr)*Number(currCount) + Number(items.price) * Number(items.qty)) / (Number(currCount) + Number(items.qty))
+      const currAvr: number = stateItems[Number(items.item)].avrPrice
+      const currCount: number = stateItems[Number(items.item)].count
+      const inputQty: number = currCount + Number(items.qty)
+      const totalAvr = ( currAvr * currCount + Number(items.price) * Number(items.qty) ) / (currCount + Number(items.qty))
       stateItems[Number(items.item)].avrPrice = totalAvr
-      stateItems[Number(items.item)].count = Number(currCount) + Number(items.qty)
+      stateItems[Number(items.item)].count = inputQty
 
-      this.setState({ stateItems: stateItems , msg: items.qty + ' Items added successfully', error: {status: 'false'}})
-    } else if(items.qty < 0){
+      this.setState({ stateItems: stateItems , msg: items.qty + ' Items added successfully', error: { msg: error.msg, status: 'false' }})
+    } else if (Number(items.qty) < 0) {
       this.setState({ error: { msg: 'The qty must be larger than zero' , status: 'true'}})
-    }else {
+    } else {
       this.setState({ error: { msg: 'The price must be larger than zero' , status: 'true'}})
     }
   }
 
   //Uses user input to update the state variable. Used with BuyersForm
-  onSubmitOrder = ( items ) => {
-    const { stateItems , emails } = this.state
-    const pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-    if(items.email === ''){
+  onSubmitOrder = ( items: IItemParam ) => {
+    const { stateItems , emails, error } = this.state
+    const pattern: RegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    
+    if (items.email === '') {
       this.setState({error: {msg: 'You must enter a email address', status: 'true'}})
-    }else if(!items.email.match(pattern)){
+    } else if (!items.email.match(pattern)) {
       this.setState({error: {msg: 'That is not a valid email address', status: 'true'}})
-    }else if(emails.includes(items.email)){
+    } else if (emails.includes(items.email)) {
       this.setState({error: {msg: 'You have already made a purchase', status: 'true'}}) 
     }else{
-      if(items.qty > 0){
-        if(stateItems[Number(items.item)] < items.qty){
+      if(Number(items.qty) > 0){
+        if(stateItems[Number(items.item)].qty < Number(items.qty)){
           this.setState({error: {msg: 'There is currently not enough stock of that item', status: 'true'}})
         }else{
           emails.push(items.email)
 
-          const currQty = stateItems[Number(items.item)].qty
-          const totalQty = Number(currQty) - items.qty
+          const currQty: number = stateItems[Number(items.item)].qty
+          const totalQty: number = currQty - Number(items.qty)
           stateItems[Number(items.item)].qty = totalQty
 
           this.setState({ 
             stateItems: stateItems , 
-            msg: 'Your total cost is R ' + (items.qty * stateItems[Number(items.item)].avrPrice) , 
-            error: {status: 'false'}})
+            msg: 'Your total cost is R ' + (Number(items.qty) * stateItems[Number(items.item)].avrPrice) , 
+            error: { msg: error.msg, status: 'false'}})
         }
       } else {
         this.setState({ error: { msg: 'The qty must be larger than zero' , status: 'true'}})
@@ -101,19 +135,19 @@ class App extends Component {
     }
   } 
 
-  changeLocation = (event) => {
-    const btn = event.target.id
+  changeLocation = (event: React.MouseEvent<HTMLInputElement>) => {
+    const btn = (event.target as Element).id
     
     this.setState({ loc: btn })
   }
  
   render() {
     
-    const { error, msg, loc, stateItems  } = this.state
+    const { error, msg, loc, stateItems } = this.state
 
     return(
       <div>
-        <center className='mainHeading'><MDBTypography tag='h1' variant='display-1'>Corner Store</MDBTypography></center>
+        <div className='mainHeading center'><MDBTypography tag='h1' variant='display-1'>Corner Store</MDBTypography></div>
         <Navbar variant="dark" bg="dark" className='row justify-content-center nav'>
             <Button variant='secondary' className='navBtn' id='AddStock' onClick={ this.changeLocation } >Add Stock</Button>
             <Button variant='secondary' className='navBtn' id='BuyItems' onClick={ this.changeLocation } >Buy Items</Button>
